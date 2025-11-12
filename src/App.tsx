@@ -3,6 +3,7 @@ import BannerCanvas from './components/BannerCanvas';
 import TextEditor from './components/TextEditor';
 import FontSelector from './components/FontSelector';
 import FontSizeSelector from './components/FontSizeSelector';
+import FontColorSelector from './components/FontColorSelector';
 import AspectRatioSelector, { AspectRatio } from './components/AspectRatioSelector';
 import BlurSlider from './components/BlurSlider';
 import ImageSearch from './components/ImageSearch';
@@ -11,9 +12,11 @@ import DownloadButton from './components/DownloadButton';
 const App: React.FC = () => {
   const [text, setText] = useState('Create Beautiful Banners');
   const [fontFamily, setFontFamily] = useState('Arial, sans-serif');
-  const [fontSize, setFontSize] = useState(72);
-  const [aspectRatio, setAspectRatio] = useState<AspectRatio>('blog-16:9');
-  const [blurAmount, setBlurAmount] = useState(8);
+    const [fontSize, setFontSize] = useState(72);
+    const [fontColor, setFontColor] = useState('#ffffff');
+    const [textStrokeColor, setTextStrokeColor] = useState('#000000');
+    const [aspectRatio, setAspectRatio] = useState<AspectRatio>('blog-1000:420');
+    const [blurAmount, setBlurAmount] = useState(8);
   const [backgroundImage, setBackgroundImage] = useState('');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -92,6 +95,12 @@ const App: React.FC = () => {
               <div className="p-6 space-y-4">
                 <FontSelector selectedFont={fontFamily} setFont={setFontFamily} />
                 <FontSizeSelector fontSize={fontSize} setFontSize={setFontSize} />
+                <FontColorSelector 
+                  fontColor={fontColor} 
+                  setFontColor={setFontColor}
+                  textStrokeColor={textStrokeColor}
+                  setTextStrokeColor={setTextStrokeColor}
+                />
               </div>
             </div>
 
@@ -132,6 +141,8 @@ const App: React.FC = () => {
                   text={text}
                   fontFamily={fontFamily}
                   fontSize={fontSize}
+                  fontColor={fontColor}
+                  textStrokeColor={textStrokeColor}
                   aspectRatio={aspectRatio}
                   blurAmount={blurAmount}
                   backgroundImage={backgroundImage}

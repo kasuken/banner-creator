@@ -6,12 +6,14 @@ interface BannerCanvasProps {
     text: string;
     fontFamily: string;
     fontSize: number;
+    fontColor: string;
+    textStrokeColor: string;
     aspectRatio: AspectRatio;
     blurAmount: number;
 }
 
 const BannerCanvas = forwardRef<HTMLCanvasElement, BannerCanvasProps>(
-    ({ backgroundImage, text, fontFamily, fontSize, aspectRatio, blurAmount }, ref) => {
+    ({ backgroundImage, text, fontFamily, fontSize, fontColor, textStrokeColor, aspectRatio, blurAmount }, ref) => {
         const internalRef = useRef<HTMLCanvasElement>(null);
         const canvasRef = (ref as React.RefObject<HTMLCanvasElement>) || internalRef;
 
@@ -59,22 +61,22 @@ const BannerCanvas = forwardRef<HTMLCanvasElement, BannerCanvasProps>(
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                     // Draw text
-                    drawText(ctx, text, fontFamily, fontSize, canvas.width, canvas.height);
+                    drawText(ctx, text, fontFamily, fontSize, fontColor, textStrokeColor, canvas.width, canvas.height);
                 };
 
                 img.onerror = () => {
                     // If image fails to load, just draw text on gray background
                     ctx.fillStyle = '#f3f4f6';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    drawText(ctx, text, fontFamily, fontSize, canvas.width, canvas.height);
+                    drawText(ctx, text, fontFamily, fontSize, fontColor, textStrokeColor, canvas.width, canvas.height);
                 };
             } else {
                 // No background image, use gray background
                 ctx.fillStyle = '#f3f4f6';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                drawText(ctx, text, fontFamily, fontSize, canvas.width, canvas.height);
+                drawText(ctx, text, fontFamily, fontSize, fontColor, textStrokeColor, canvas.width, canvas.height);
             }
-        }, [backgroundImage, text, fontFamily, fontSize, aspectRatio, blurAmount]);
+        }, [backgroundImage, text, fontFamily, fontSize, fontColor, textStrokeColor, aspectRatio, blurAmount]);
 
         const wrapText = (
             ctx: CanvasRenderingContext2D,
@@ -121,6 +123,8 @@ const BannerCanvas = forwardRef<HTMLCanvasElement, BannerCanvasProps>(
             text: string,
             fontFamily: string,
             fontSize: number,
+            fontColor: string,
+            textStrokeColor: string,
             width: number,
             height: number
         ) => {
@@ -128,10 +132,10 @@ const BannerCanvas = forwardRef<HTMLCanvasElement, BannerCanvasProps>(
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            // Draw text with white fill and black stroke for better visibility
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+            // Draw text with custom colors
+            ctx.strokeStyle = textStrokeColor;
             ctx.lineWidth = 3;
-            ctx.fillStyle = 'white';
+            ctx.fillStyle = fontColor;
 
             // Wrap text with padding on sides
             const maxWidth = width * 0.9; // 90% of canvas width

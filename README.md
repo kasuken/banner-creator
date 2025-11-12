@@ -23,11 +23,7 @@
 
 ## ✨ Features
 
-<table>
-<tr>
-<td width="50%">
-
-### 🎯 **Core Features**
+### 🎯 Core Features
 - 📝 **Rich Text Editor** with line break support
 - 🎨 **8 Premium Fonts** to choose from
 - 📏 **Font Size Control** (32-160px)
@@ -37,10 +33,7 @@
 - 🌫️ **Blur Control** (0-20px)
 - 💾 **One-Click Download** as PNG
 
-</td>
-<td width="50%">
-
-### ♿ **Accessibility First**
+### ♿ Accessibility First
 - ⌨️ **Full Keyboard Navigation**
 - 🔊 **Screen Reader Optimized**
 - 🎯 **WCAG 2.1 AA Compliant**
@@ -49,10 +42,6 @@
 - 📱 **Responsive Design**
 - 🚀 **Performance Optimized**
 - 🌐 **Semantic HTML5**
-
-</td>
-</tr>
-</table>
 
 ---
 

@@ -17,7 +17,7 @@ const App: React.FC = () => {
     const [textStrokeColor, setTextStrokeColor] = useState('#000000');
     const [aspectRatio, setAspectRatio] = useState<AspectRatio>('blog-1000:420');
     const [blurAmount, setBlurAmount] = useState(8);
-  const [backgroundImage, setBackgroundImage] = useState('');
+  const [backgroundImage, setBackgroundImage] = useState('https://plus.unsplash.com/premium_photo-1661873863027-51b409f112f5?q=80&w=1428&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (

@@ -10,17 +10,30 @@ const TextEditor: React.FC<TextEditorProps> = ({ text, setText }) => {
         setText(event.target.value);
     };
 
+    const charCount = text.length;
+
     return (
-        <div className="w-full max-w-2xl mb-4">
+        <div className="w-full">
             <label className="block mb-2 text-sm font-medium text-gray-700">
-                Banner Text:
+                Your Text
             </label>
             <textarea
                 value={text}
                 onChange={handleChange}
-                placeholder="Enter your banner text here..."
-                className="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Type your banner text here...\nPress Enter for new lines"
+                className="w-full h-32 p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-none text-lg"
             />
+            <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
+                <span className="flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Tip: Use Enter for line breaks
+                </span>
+                <span className={charCount > 100 ? 'text-amber-600 font-medium' : ''}>
+                    {charCount} characters
+                </span>
+            </div>
         </div>
     );
 };

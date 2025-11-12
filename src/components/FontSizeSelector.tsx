@@ -7,10 +7,15 @@ interface FontSizeSelectorProps {
 
 const FontSizeSelector: React.FC<FontSizeSelectorProps> = ({ fontSize, setFontSize }) => {
     return (
-        <div className="w-full max-w-2xl mb-4">
-            <label htmlFor="font-size" className="block mb-2 text-sm font-medium text-gray-700">
-                Font Size: {fontSize}px
-            </label>
+        <div className="w-full">
+            <div className="flex justify-between items-center mb-3">
+                <label htmlFor="font-size" className="text-sm font-medium text-gray-700">
+                    Font Size
+                </label>
+                <span className="text-sm font-bold text-pink-600 bg-pink-50 px-3 py-1 rounded-full">
+                    {fontSize}px
+                </span>
+            </div>
             <input
                 id="font-size"
                 type="range"
@@ -19,11 +24,14 @@ const FontSizeSelector: React.FC<FontSizeSelectorProps> = ({ fontSize, setFontSi
                 step="2"
                 value={fontSize}
                 onChange={(e) => setFontSize(Number(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                className="w-full h-3 bg-gradient-to-r from-pink-200 to-rose-200 rounded-lg appearance-none cursor-pointer accent-pink-600 slider"
+                style={{
+                    background: `linear-gradient(to right, #ec4899 0%, #ec4899 ${((fontSize - 32) / (160 - 32)) * 100}%, #fce7f3 ${((fontSize - 32) / (160 - 32)) * 100}%, #fce7f3 100%)`
+                }}
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>Small (24px)</span>
-                <span>Large (120px)</span>
+            <div className="flex justify-between text-xs text-gray-500 mt-2">
+                <span>32px</span>
+                <span>160px</span>
             </div>
         </div>
     );

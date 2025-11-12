@@ -152,10 +152,10 @@ const BannerCanvas = forwardRef<HTMLCanvasElement, BannerCanvasProps>(
         };
 
         return (
-            <div className="w-full max-w-2xl mb-6">
+            <div className="w-full">
                 <canvas
                     ref={canvasRef}
-                    className="w-full border-2 border-gray-300 rounded-lg shadow-lg"
+                    className="w-full rounded-xl shadow-2xl border-4 border-gray-100"
                 />
             </div>
         );

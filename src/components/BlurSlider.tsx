@@ -17,7 +17,7 @@ const BlurSlider: React.FC<BlurSliderProps> = ({ blurAmount, setBlurAmount }) =>
                     Blur Intensity
                 </label>
                 <span className="text-sm font-bold text-cyan-600 bg-cyan-50 px-3 py-1 rounded-full">
-                    {blurAmount}px
+                    {blurAmount}
                 </span>
             </div>
             <input
@@ -35,12 +35,12 @@ const BlurSlider: React.FC<BlurSliderProps> = ({ blurAmount, setBlurAmount }) =>
                 aria-valuemin={0}
                 aria-valuemax={20}
                 aria-valuenow={blurAmount}
-                aria-valuetext={`${blurAmount} pixels blur`}
+                aria-valuetext={`${blurAmount} blur`}
                 aria-describedby="blur-range"
             />
             <div id="blur-range" className="flex justify-between text-xs text-gray-500 mt-2">
-                <span>Sharp (0px)</span>
-                <span>Maximum (20px)</span>
+                <span>Sharp (0)</span>
+                <span>Maximum (20)</span>
             </div>
         </div>
     );

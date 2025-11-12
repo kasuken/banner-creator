@@ -28,8 +28,13 @@ const FontSizeSelector: React.FC<FontSizeSelectorProps> = ({ fontSize, setFontSi
                 style={{
                     background: `linear-gradient(to right, #ec4899 0%, #ec4899 ${((fontSize - 32) / (160 - 32)) * 100}%, #fce7f3 ${((fontSize - 32) / (160 - 32)) * 100}%, #fce7f3 100%)`
                 }}
+                aria-valuemin={32}
+                aria-valuemax={160}
+                aria-valuenow={fontSize}
+                aria-valuetext={`${fontSize} pixels`}
+                aria-describedby="font-size-range"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
+            <div id="font-size-range" className="flex justify-between text-xs text-gray-500 mt-2">
                 <span>32px</span>
                 <span>160px</span>
             </div>

@@ -160,6 +160,8 @@ const BannerCanvas = forwardRef<HTMLCanvasElement, BannerCanvasProps>(
                 <canvas
                     ref={canvasRef}
                     className="w-full rounded-xl shadow-2xl border-4 border-gray-100"
+                    aria-label="Banner preview canvas"
+                    role="img"
                 />
             </div>
         );

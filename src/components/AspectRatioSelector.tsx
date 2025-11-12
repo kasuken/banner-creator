@@ -88,7 +88,7 @@ const AspectRatioSelector: React.FC<AspectRatioSelectorProps> = ({ aspectRatio, 
             </label>
             
             {/* Category Tabs */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2 mb-4" role="tablist" aria-label="Platform selection">
                 <button
                     onClick={() => handleCategoryChange('blog')}
                     className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all ${
@@ -96,6 +96,9 @@ const AspectRatioSelector: React.FC<AspectRatioSelectorProps> = ({ aspectRatio, 
                             ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg'
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
+                    role="tab"
+                    aria-selected={selectedCategory === 'blog'}
+                    aria-controls="aspect-ratio-options"
                 >
                     <div className="flex items-center justify-center gap-2">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,6 +114,9 @@ const AspectRatioSelector: React.FC<AspectRatioSelectorProps> = ({ aspectRatio, 
                             ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
+                    role="tab"
+                    aria-selected={selectedCategory === 'linkedin'}
+                    aria-controls="aspect-ratio-options"
                 >
                     <div className="flex items-center justify-center gap-2">
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -122,7 +128,7 @@ const AspectRatioSelector: React.FC<AspectRatioSelectorProps> = ({ aspectRatio, 
             </div>
 
             {/* Ratio Options */}
-            <div className="grid grid-cols-2 gap-3">
+            <div id="aspect-ratio-options" className="grid grid-cols-2 gap-3" role="tabpanel" aria-label="Aspect ratio options">
                 {ratioConfigs[selectedCategory].map((config) => (
                     <button
                         key={config.id}
@@ -132,6 +138,8 @@ const AspectRatioSelector: React.FC<AspectRatioSelectorProps> = ({ aspectRatio, 
                                 ? 'border-purple-500 bg-purple-50 shadow-md'
                                 : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
                         }`}
+                        aria-pressed={aspectRatio === config.id}
+                        aria-label={`${config.name}, ${config.dimensions.width} by ${config.dimensions.height} pixels, ${config.description}`}
                     >
                         <div className="font-semibold text-gray-800 mb-1">{config.name}</div>
                         <div className="text-xs text-gray-600 mb-1">

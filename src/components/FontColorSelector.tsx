@@ -30,12 +30,12 @@ const FontColorSelector: React.FC<FontColorSelectorProps> = ({
         <div className="w-full space-y-4">
             {/* Text Fill Color */}
             <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">
+                <label htmlFor="text-color-custom" className="block mb-2 text-sm font-medium text-gray-700">
                     Text Color
                 </label>
                 
                 {/* Preset Colors */}
-                <div className="grid grid-cols-5 gap-2 mb-3">
+                <div className="grid grid-cols-5 gap-2 mb-3" role="group" aria-label="Preset text colors">
                     {presetColors.map((color) => (
                         <button
                             key={color.value}
@@ -47,6 +47,8 @@ const FontColorSelector: React.FC<FontColorSelectorProps> = ({
                             }`}
                             style={{ backgroundColor: color.value }}
                             title={color.name}
+                            aria-label={`Select ${color.name} text color`}
+                            aria-pressed={fontColor === color.value}
                         >
                             {fontColor === color.value && (
                                 <div className="absolute inset-0 flex items-center justify-center">
@@ -69,16 +71,18 @@ const FontColorSelector: React.FC<FontColorSelectorProps> = ({
 
                 {/* Custom Color Picker */}
                 <div className="flex items-center gap-3">
-                    <label className="flex items-center gap-2 flex-1 cursor-pointer">
+                    <label htmlFor="text-color-custom" className="flex items-center gap-2 flex-1 cursor-pointer">
                         <input
+                            id="text-color-custom"
                             type="color"
                             value={fontColor}
                             onChange={(e) => setFontColor(e.target.value)}
                             className="w-12 h-10 rounded-lg cursor-pointer border-2 border-gray-200"
+                            aria-label="Custom text color"
                         />
                         <span className="text-sm text-gray-600">Custom</span>
                     </label>
-                    <div className="px-3 py-2 bg-gray-100 rounded-lg font-mono text-xs text-gray-700">
+                    <div className="px-3 py-2 bg-gray-100 rounded-lg font-mono text-xs text-gray-700" aria-live="polite" aria-atomic="true">
                         {fontColor.toUpperCase()}
                     </div>
                 </div>
@@ -86,12 +90,12 @@ const FontColorSelector: React.FC<FontColorSelectorProps> = ({
 
             {/* Text Border Color */}
             <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">
+                <label htmlFor="border-color-custom" className="block mb-2 text-sm font-medium text-gray-700">
                     Border Color
                 </label>
                 
                 {/* Preset Colors */}
-                <div className="grid grid-cols-5 gap-2 mb-3">
+                <div className="grid grid-cols-5 gap-2 mb-3" role="group" aria-label="Preset border colors">
                     {presetColors.map((color) => (
                         <button
                             key={color.value}
@@ -103,6 +107,8 @@ const FontColorSelector: React.FC<FontColorSelectorProps> = ({
                             }`}
                             style={{ backgroundColor: color.value }}
                             title={color.name}
+                            aria-label={`Select ${color.name} border color`}
+                            aria-pressed={textStrokeColor === color.value}
                         >
                             {textStrokeColor === color.value && (
                                 <div className="absolute inset-0 flex items-center justify-center">
@@ -125,16 +131,18 @@ const FontColorSelector: React.FC<FontColorSelectorProps> = ({
 
                 {/* Custom Color Picker */}
                 <div className="flex items-center gap-3">
-                    <label className="flex items-center gap-2 flex-1 cursor-pointer">
+                    <label htmlFor="border-color-custom" className="flex items-center gap-2 flex-1 cursor-pointer">
                         <input
+                            id="border-color-custom"
                             type="color"
                             value={textStrokeColor}
                             onChange={(e) => setTextStrokeColor(e.target.value)}
                             className="w-12 h-10 rounded-lg cursor-pointer border-2 border-gray-200"
+                            aria-label="Custom border color"
                         />
                         <span className="text-sm text-gray-600">Custom</span>
                     </label>
-                    <div className="px-3 py-2 bg-gray-100 rounded-lg font-mono text-xs text-gray-700">
+                    <div className="px-3 py-2 bg-gray-100 rounded-lg font-mono text-xs text-gray-700" aria-live="polite" aria-atomic="true">
                         {textStrokeColor.toUpperCase()}
                     </div>
                 </div>

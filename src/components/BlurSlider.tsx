@@ -32,8 +32,13 @@ const BlurSlider: React.FC<BlurSliderProps> = ({ blurAmount, setBlurAmount }) =>
                 style={{
                     background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${(blurAmount / 20) * 100}%, #cffafe ${(blurAmount / 20) * 100}%, #cffafe 100%)`
                 }}
+                aria-valuemin={0}
+                aria-valuemax={20}
+                aria-valuenow={blurAmount}
+                aria-valuetext={`${blurAmount} pixels blur`}
+                aria-describedby="blur-range"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
+            <div id="blur-range" className="flex justify-between text-xs text-gray-500 mt-2">
                 <span>Sharp (0px)</span>
                 <span>Maximum (20px)</span>
             </div>

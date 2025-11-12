@@ -186,6 +186,15 @@ const App: React.FC = () => {
                 </li>
               </ul>
             </aside>
+
+            {/* Visitor Badge */}
+            <div className="mt-6 flex justify-center">
+              <img 
+                src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fkasuken.github.io%2Fbanner-creator%2F&countColor=%23263759" 
+                alt="Visitor count badge"
+                className="rounded-lg"
+              />
+            </div>
           </section>
         </div>
       </main>

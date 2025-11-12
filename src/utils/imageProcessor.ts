@@ -1,5 +1,3 @@
-import { ImageData } from '../types';
-
 export const applyBlurEffect = (imageData: ImageData, blurAmount: number): ImageData => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');

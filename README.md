@@ -270,7 +270,6 @@ See [open issues](https://github.com/yourusername/banner-creator/issues) for a f
 - [ ] 🌍 Multi-language support
 - [ ] 📱 Mobile app version
 - [ ] 🤖 AI-powered design suggestions
-- [ ] 🔗 Direct social media sharing
 
 ---
 

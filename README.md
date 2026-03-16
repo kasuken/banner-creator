@@ -82,7 +82,8 @@ Visit **http://localhost:3000** and start creating! 🎉
 ## 📸 Screenshots
 
 ### Main Interface
-<img src="/img/screen1.png" width="600"/>
+
+<img  width="600" alt="screenshot application" src="https://github.com/user-attachments/assets/744a5333-a4e8-4bd1-84cc-fb8b54046b41" />
 
 ---
 

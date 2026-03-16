@@ -42,11 +42,6 @@ const App: React.FC = () => {
               Banner Creator
             </h1>
           </div>
-          <nav className="flex items-center gap-1 text-xs text-cream-muted font-body tracking-wide uppercase">
-            <span>Studio</span>
-            <span className="mx-2 text-surface-border">/</span>
-            <span className="text-copper">Editor</span>
-          </nav>
         </div>
       </header>
 

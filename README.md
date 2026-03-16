@@ -13,7 +13,7 @@
 [![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1_AA-00A86B?style=flat&logo=w3c&logoColor=white)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat)](https://opensource.org/licenses/MIT)
 
-[✨ Live Demo](http://localhost:3001) · [📖 Documentation](#-features) · [🐛 Report Bug](https://github.com/kasuken/banner-creator/issues) · [💡 Request Feature](https://github.com/kasuken/banner-creator/issues)
+[✨ Live Demo](https://kasuken.github.io/banner-creator) · [📖 Documentation](#-features) · [🐛 Report Bug](https://github.com/kasuken/banner-creator/issues) · [💡 Request Feature](https://github.com/kasuken/banner-creator/issues)
 
 <img src="bannercreator.png" alt="Banner Creator Screenshot" width="800"/>
 

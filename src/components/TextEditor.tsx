@@ -14,26 +14,21 @@ const TextEditor: React.FC<TextEditorProps> = ({ text, setText }) => {
 
     return (
         <div className="w-full">
-            <label htmlFor="banner-text" className="block mb-2 text-sm font-medium text-gray-700">
+            <label htmlFor="banner-text" className="block mb-2 text-xs font-medium text-cream-dim tracking-wide">
                 Your Text
             </label>
             <textarea
                 id="banner-text"
                 value={text}
                 onChange={handleChange}
-                placeholder="Type your banner text here...\nPress Enter for new lines"
-                className="w-full h-32 p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-none text-lg"
-                aria-describedby="text-char-count text-tip"
+                placeholder="Type your banner text here..."
+                className="w-full h-28 p-3 bg-surface-overlay border border-surface-border rounded-md text-cream placeholder:text-cream-muted/40 focus:border-copper focus:ring-1 focus:ring-copper/30 transition-colors resize-none text-sm leading-relaxed font-body"
+                aria-describedby="text-char-count"
             />
-            <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
-                <span id="text-tip" className="flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Tip: Use Enter for line breaks
-                </span>
-                <span id="text-char-count" className={charCount > 100 ? 'text-amber-600 font-medium' : ''} aria-live="polite">
-                    {charCount} characters
+            <div className="flex justify-between items-center mt-1.5 text-[11px] text-cream-muted">
+                <span className="font-mono opacity-60">Enter for line breaks</span>
+                <span id="text-char-count" className={charCount > 100 ? 'text-copper font-medium' : 'opacity-60'} aria-live="polite">
+                    {charCount}
                 </span>
             </div>
         </div>

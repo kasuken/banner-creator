@@ -19,7 +19,7 @@ interface FontSelectorProps {
 const FontSelector: React.FC<FontSelectorProps> = ({ selectedFont, setFont }) => {
     return (
         <div className="w-full">
-            <label htmlFor="font-select" className="block mb-2 text-sm font-medium text-gray-700">
+            <label htmlFor="font-select" className="block mb-2 text-xs font-medium text-cream-dim tracking-wide">
                 Font Family
             </label>
             <div className="relative">
@@ -27,7 +27,7 @@ const FontSelector: React.FC<FontSelectorProps> = ({ selectedFont, setFont }) =>
                     id="font-select"
                     value={selectedFont}
                     onChange={(e) => setFont(e.target.value)}
-                    className="w-full border-2 border-gray-200 rounded-xl p-3 pr-10 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all appearance-none bg-white cursor-pointer text-base font-medium"
+                    className="w-full bg-surface-overlay border border-surface-border rounded-md p-2.5 pr-9 text-cream text-sm focus:border-copper focus:ring-1 focus:ring-copper/30 transition-colors appearance-none cursor-pointer font-body"
                 >
                     {fonts.map((font) => (
                         <option key={font.value} value={font.value}>
@@ -35,7 +35,7 @@ const FontSelector: React.FC<FontSelectorProps> = ({ selectedFont, setFont }) =>
                         </option>
                     ))}
                 </select>
-                <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-cream-muted pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </div>

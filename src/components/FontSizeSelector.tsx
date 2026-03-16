@@ -6,13 +6,15 @@ interface FontSizeSelectorProps {
 }
 
 const FontSizeSelector: React.FC<FontSizeSelectorProps> = ({ fontSize, setFontSize }) => {
+    const pct = ((fontSize - 32) / (160 - 32)) * 100;
+
     return (
         <div className="w-full">
-            <div className="flex justify-between items-center mb-3">
-                <label htmlFor="font-size" className="text-sm font-medium text-gray-700">
+            <div className="flex justify-between items-center mb-2">
+                <label htmlFor="font-size" className="text-xs font-medium text-cream-dim tracking-wide">
                     Font Size
                 </label>
-                <span className="text-sm font-bold text-pink-600 bg-pink-50 px-3 py-1 rounded-full">
+                <span className="text-xs font-mono text-copper tabular-nums">
                     {fontSize}px
                 </span>
             </div>
@@ -24,9 +26,9 @@ const FontSizeSelector: React.FC<FontSizeSelectorProps> = ({ fontSize, setFontSi
                 step="2"
                 value={fontSize}
                 onChange={(e) => setFontSize(Number(e.target.value))}
-                className="w-full h-3 bg-gradient-to-r from-pink-200 to-rose-200 rounded-lg appearance-none cursor-pointer accent-pink-600 slider"
+                className="w-full"
                 style={{
-                    background: `linear-gradient(to right, #ec4899 0%, #ec4899 ${((fontSize - 32) / (160 - 32)) * 100}%, #fce7f3 ${((fontSize - 32) / (160 - 32)) * 100}%, #fce7f3 100%)`
+                    background: `linear-gradient(to right, #c47d5a 0%, #c47d5a ${pct}%, #2a2a2a ${pct}%, #2a2a2a 100%)`
                 }}
                 aria-valuemin={32}
                 aria-valuemax={160}
@@ -34,9 +36,9 @@ const FontSizeSelector: React.FC<FontSizeSelectorProps> = ({ fontSize, setFontSi
                 aria-valuetext={`${fontSize} pixels`}
                 aria-describedby="font-size-range"
             />
-            <div id="font-size-range" className="flex justify-between text-xs text-gray-500 mt-2">
-                <span>32px</span>
-                <span>160px</span>
+            <div id="font-size-range" className="flex justify-between text-[10px] text-cream-muted/50 mt-1 font-mono">
+                <span>32</span>
+                <span>160</span>
             </div>
         </div>
     );

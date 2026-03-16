@@ -3,12 +3,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#1DA1F2',
-        secondary: '#14171A',
+        surface: {
+          DEFAULT: '#141414',
+          raised: '#1a1a1a',
+          overlay: '#222222',
+          border: '#2a2a2a',
+        },
+        cream: {
+          DEFAULT: '#f5f0e8',
+          dim: '#a09a90',
+          muted: '#6b6660',
+        },
+        copper: {
+          DEFAULT: '#c47d5a',
+          light: '#d4996e',
+          dark: '#a0614a',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Merriweather', 'serif'],
+        display: ['"Instrument Serif"', 'Georgia', 'serif'],
+        body: ['"DM Sans"', 'system-ui', 'sans-serif'],
       },
     },
   },

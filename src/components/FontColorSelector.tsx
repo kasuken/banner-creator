@@ -26,127 +26,73 @@ const FontColorSelector: React.FC<FontColorSelectorProps> = ({
         { name: 'Gray', value: '#6b7280' },
     ];
 
+    const ColorRow = ({ 
+        label, 
+        id, 
+        value, 
+        onChange, 
+        ariaGroupLabel 
+    }: { 
+        label: string; 
+        id: string; 
+        value: string; 
+        onChange: (v: string) => void; 
+        ariaGroupLabel: string;
+    }) => (
+        <div>
+            <label htmlFor={id} className="block mb-2 text-xs font-medium text-cream-dim tracking-wide">
+                {label}
+            </label>
+            <div className="flex items-center gap-2.5">
+                <div className="flex gap-1" role="group" aria-label={ariaGroupLabel}>
+                    {presetColors.map((color) => (
+                        <button
+                            key={color.value}
+                            onClick={() => onChange(color.value)}
+                            className={`w-6 h-6 rounded-sm border transition-all ${
+                                value === color.value
+                                    ? 'border-copper ring-1 ring-copper/40 scale-110'
+                                    : 'border-surface-border hover:border-cream-muted/30'
+                            }`}
+                            style={{ backgroundColor: color.value }}
+                            title={color.name}
+                            aria-label={`Select ${color.name}`}
+                            aria-pressed={value === color.value}
+                        />
+                    ))}
+                </div>
+                <div className="h-5 w-px bg-surface-border" aria-hidden="true" />
+                <input
+                    id={id}
+                    type="color"
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="w-6 h-6 rounded-sm cursor-pointer border border-surface-border bg-transparent"
+                    aria-label={`Custom ${label.toLowerCase()}`}
+                />
+                <span className="text-[10px] font-mono text-cream-muted/50 tracking-wider">
+                    {value.toUpperCase()}
+                </span>
+            </div>
+        </div>
+    );
+
     return (
         <div className="w-full space-y-4">
-            {/* Text Fill Color */}
-            <div>
-                <label htmlFor="text-color-custom" className="block mb-2 text-sm font-medium text-gray-700">
-                    Text Color
-                </label>
-                
-                {/* Preset Colors */}
-                <div className="grid grid-cols-5 gap-2 mb-3" role="group" aria-label="Preset text colors">
-                    {presetColors.map((color) => (
-                        <button
-                            key={color.value}
-                            onClick={() => setFontColor(color.value)}
-                            className={`relative w-full h-10 rounded-lg border-2 transition-all ${
-                                fontColor === color.value
-                                    ? 'border-pink-500 ring-2 ring-pink-200'
-                                    : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                            style={{ backgroundColor: color.value }}
-                            title={color.name}
-                            aria-label={`Select ${color.name} text color`}
-                            aria-pressed={fontColor === color.value}
-                        >
-                            {fontColor === color.value && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <svg
-                                        className="w-5 h-5 drop-shadow-lg"
-                                        fill={color.value === '#ffffff' ? '#000000' : '#ffffff'}
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                </div>
-                            )}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Custom Color Picker */}
-                <div className="flex items-center gap-3">
-                    <label htmlFor="text-color-custom" className="flex items-center gap-2 flex-1 cursor-pointer">
-                        <input
-                            id="text-color-custom"
-                            type="color"
-                            value={fontColor}
-                            onChange={(e) => setFontColor(e.target.value)}
-                            className="w-12 h-10 rounded-lg cursor-pointer border-2 border-gray-200"
-                            aria-label="Custom text color"
-                        />
-                        <span className="text-sm text-gray-600">Custom</span>
-                    </label>
-                    <div className="px-3 py-2 bg-gray-100 rounded-lg font-mono text-xs text-gray-700" aria-live="polite" aria-atomic="true">
-                        {fontColor.toUpperCase()}
-                    </div>
-                </div>
-            </div>
-
-            {/* Text Border Color */}
-            <div>
-                <label htmlFor="border-color-custom" className="block mb-2 text-sm font-medium text-gray-700">
-                    Border Color
-                </label>
-                
-                {/* Preset Colors */}
-                <div className="grid grid-cols-5 gap-2 mb-3" role="group" aria-label="Preset border colors">
-                    {presetColors.map((color) => (
-                        <button
-                            key={color.value}
-                            onClick={() => setTextStrokeColor(color.value)}
-                            className={`relative w-full h-10 rounded-lg border-2 transition-all ${
-                                textStrokeColor === color.value
-                                    ? 'border-pink-500 ring-2 ring-pink-200'
-                                    : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                            style={{ backgroundColor: color.value }}
-                            title={color.name}
-                            aria-label={`Select ${color.name} border color`}
-                            aria-pressed={textStrokeColor === color.value}
-                        >
-                            {textStrokeColor === color.value && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <svg
-                                        className="w-5 h-5 drop-shadow-lg"
-                                        fill={color.value === '#ffffff' ? '#000000' : '#ffffff'}
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                </div>
-                            )}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Custom Color Picker */}
-                <div className="flex items-center gap-3">
-                    <label htmlFor="border-color-custom" className="flex items-center gap-2 flex-1 cursor-pointer">
-                        <input
-                            id="border-color-custom"
-                            type="color"
-                            value={textStrokeColor}
-                            onChange={(e) => setTextStrokeColor(e.target.value)}
-                            className="w-12 h-10 rounded-lg cursor-pointer border-2 border-gray-200"
-                            aria-label="Custom border color"
-                        />
-                        <span className="text-sm text-gray-600">Custom</span>
-                    </label>
-                    <div className="px-3 py-2 bg-gray-100 rounded-lg font-mono text-xs text-gray-700" aria-live="polite" aria-atomic="true">
-                        {textStrokeColor.toUpperCase()}
-                    </div>
-                </div>
-            </div>
+            <ColorRow 
+                label="Text Color" 
+                id="text-color-custom" 
+                value={fontColor} 
+                onChange={setFontColor}
+                ariaGroupLabel="Preset text colors"
+            />
+            <ColorRow 
+                label="Border Color" 
+                id="border-color-custom" 
+                value={textStrokeColor} 
+                onChange={setTextStrokeColor}
+                ariaGroupLabel="Preset border colors"
+            />
         </div>
     );
 };

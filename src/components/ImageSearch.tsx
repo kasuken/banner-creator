@@ -8,7 +8,7 @@ interface ImageSearchProps {
 const ImageSearch: React.FC<ImageSearchProps> = ({ setBackgroundImage }) => {
     const [query, setQuery] = useState('');
     const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
-    const { images, loading, error, searchImages, isConfigured } = useUnsplash();
+    const { images, loading, error, searchImages } = useUnsplash();
 
     useEffect(() => {
         const debounceSearch = setTimeout(() => {
@@ -37,7 +37,6 @@ const ImageSearch: React.FC<ImageSearchProps> = ({ setBackgroundImage }) => {
                     placeholder="nature, workspace, abstract..."
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    disabled={!isConfigured}
                     className="w-full bg-surface-overlay border border-surface-border rounded-md p-2.5 pl-9 text-cream text-sm placeholder:text-cream-muted/40 focus:border-copper focus:ring-1 focus:ring-copper/30 transition-colors font-body"
                     aria-label="Search for background images"
                     aria-describedby="image-search-status"

@@ -40,27 +40,13 @@ const ImageSearch: React.FC<ImageSearchProps> = ({ setBackgroundImage }) => {
                     disabled={!isConfigured}
                     className="w-full bg-surface-overlay border border-surface-border rounded-md p-2.5 pl-9 text-cream text-sm placeholder:text-cream-muted/40 focus:border-copper focus:ring-1 focus:ring-copper/30 transition-colors font-body"
                     aria-label="Search for background images"
-                    aria-describedby="image-search-status image-search-config-hint"
+                    aria-describedby="image-search-status"
                 />
                 <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-cream-muted/40" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
 
-            {!isConfigured && (
-                <div
-                    id="image-search-config-hint"
-                    className="mt-2 p-2.5 rounded-md border border-amber-700/30 bg-amber-900/20 text-amber-300 text-xs"
-                    role="status"
-                >
-                    Unsplash search is disabled until
-                    {' '}
-                    <span className="font-semibold">VITE_UNSPLASH_ACCESS_KEY</span>
-                    {' '}
-                    is set in your environment and the app is redeployed.
-                </div>
-            )}
-            
             <div id="image-search-status" role="status" aria-live="polite" aria-atomic="true">
                 {loading && (
                     <div className="flex items-center justify-center py-6 text-cream-muted">

@@ -14,6 +14,8 @@ export interface BannerProperties {
     imageUrl: string;
 }
 
+export type ImageFitMode = 'cover' | 'stretch';
+
 export interface UnsplashResponse {
     results: Image[];
     total: number;

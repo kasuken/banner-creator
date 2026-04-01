@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, forwardRef } from 'react';
 import type { AspectRatio } from './AspectRatioSelector';
+import type { ImageFitMode } from '../types';
 
 interface BannerCanvasProps {
     backgroundImage: string;
@@ -10,10 +11,11 @@ interface BannerCanvasProps {
     textStrokeColor: string;
     aspectRatio: AspectRatio;
     blurAmount: number;
+    imageFit: ImageFitMode;
 }
 
 const BannerCanvas = forwardRef<HTMLCanvasElement, BannerCanvasProps>(
-    ({ backgroundImage, text, fontFamily, fontSize, fontColor, textStrokeColor, aspectRatio, blurAmount }, ref) => {
+    ({ backgroundImage, text, fontFamily, fontSize, fontColor, textStrokeColor, aspectRatio, blurAmount, imageFit }, ref) => {
         const internalRef = useRef<HTMLCanvasElement>(null);
         const canvasRef = (ref as React.RefObject<HTMLCanvasElement>) || internalRef;
 
@@ -48,8 +50,22 @@ const BannerCanvas = forwardRef<HTMLCanvasElement, BannerCanvasProps>(
                 img.src = backgroundImage;
 
                 img.onload = () => {
-                    // Draw image to cover canvas
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    // Draw image based on fit mode
+                    if (imageFit === 'cover') {
+                        const imgRatio = img.width / img.height;
+                        const canvasRatio = canvas.width / canvas.height;
+                        let sx = 0, sy = 0, sw = img.width, sh = img.height;
+                        if (imgRatio > canvasRatio) {
+                            sw = img.height * canvasRatio;
+                            sx = (img.width - sw) / 2;
+                        } else {
+                            sh = img.width / canvasRatio;
+                            sy = (img.height - sh) / 2;
+                        }
+                        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+                    } else {
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    }
 
                     // Apply blur effect by drawing to a temporary canvas
                     ctx.filter = `blur(${blurAmount}px)`;
@@ -76,7 +92,7 @@ const BannerCanvas = forwardRef<HTMLCanvasElement, BannerCanvasProps>(
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 drawText(ctx, text, fontFamily, fontSize, fontColor, textStrokeColor, canvas.width, canvas.height);
             }
-        }, [backgroundImage, text, fontFamily, fontSize, fontColor, textStrokeColor, aspectRatio, blurAmount]);
+        }, [backgroundImage, text, fontFamily, fontSize, fontColor, textStrokeColor, aspectRatio, blurAmount, imageFit]);
 
         const wrapText = (
             ctx: CanvasRenderingContext2D,

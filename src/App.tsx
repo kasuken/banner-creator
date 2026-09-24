@@ -10,17 +10,21 @@ import ImageSearch from './components/ImageSearch';
 import ImageFitSelector from './components/ImageFitSelector';
 import DownloadButton from './components/DownloadButton';
 import type { ImageFitMode } from './types';
+import { settingsFromSearchParams } from '../shared/presets';
+
+// Initial settings can be pre-filled via query string (used by the MCP "edit in browser" link)
+const initialSettings = settingsFromSearchParams(new URLSearchParams(window.location.search));
 
 const App: React.FC = () => {
-  const [text, setText] = useState('Create Beautiful Banners');
-  const [fontFamily, setFontFamily] = useState('Arial, sans-serif');
-    const [fontSize, setFontSize] = useState(72);
-    const [fontColor, setFontColor] = useState('#ffffff');
-    const [textStrokeColor, setTextStrokeColor] = useState('#000000');
-    const [aspectRatio, setAspectRatio] = useState<AspectRatio>('blog-1000:420');
-    const [blurAmount, setBlurAmount] = useState(8);
-    const [imageFit, setImageFit] = useState<ImageFitMode>('cover');
-  const [backgroundImage, setBackgroundImage] = useState('https://plus.unsplash.com/premium_photo-1661873863027-51b409f112f5?q=80&w=1428&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  const [text, setText] = useState(initialSettings.text);
+  const [fontFamily, setFontFamily] = useState(initialSettings.fontFamily);
+  const [fontSize, setFontSize] = useState(initialSettings.fontSize);
+  const [fontColor, setFontColor] = useState(initialSettings.fontColor);
+  const [textStrokeColor, setTextStrokeColor] = useState(initialSettings.textStrokeColor);
+  const [aspectRatio, setAspectRatio] = useState<AspectRatio>(initialSettings.aspectRatio);
+  const [blurAmount, setBlurAmount] = useState(initialSettings.blurAmount);
+  const [imageFit, setImageFit] = useState<ImageFitMode>(initialSettings.imageFit);
+  const [backgroundImage, setBackgroundImage] = useState(initialSettings.backgroundImage);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
@@ -150,7 +154,7 @@ const App: React.FC = () => {
             {/* Visitor Badge */}
             <div className="mt-8 flex justify-center opacity-40 hover:opacity-70 transition-opacity">
               <img 
-                src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fkasuken.github.io%2Fbanner-creator%2F&countColor=%23263759" 
+                src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fwww.bannercreator.pro%2F&countColor=%23263759" 
                 alt="Visitor count badge"
                 className="rounded"
               />
@@ -167,6 +171,15 @@ const App: React.FC = () => {
               Images powered by <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-700 font-medium">Unsplash</a>
             </p>
             <div className="flex items-center gap-4">
+              <a
+                href="https://github.com/kasuken/banner-creator#-mcp-server"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium"
+                aria-label="Use Banner Creator from AI agents via the MCP server"
+              >
+                MCP server
+              </a>
               <a 
                 href="https://github.com/kasuken/banner-creator" 
                 target="_blank" 

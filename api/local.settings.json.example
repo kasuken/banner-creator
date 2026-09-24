@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+    "UNSPLASH_ACCESS_KEY": "your_unsplash_access_key_here",
+    "PUBLIC_SITE_URL": "http://localhost:4280"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": [
+      "/api/*",
+      "/assets/*",
+      "*.{css,js,map,png,jpg,jpeg,gif,svg,ico,webp,woff,woff2,txt,json}"
+    ]
+  },
+  "platform": {
+    "apiRuntime": "node:20"
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Frame-Options": "DENY"
+  }
+}

@@ -1,71 +1,9 @@
 import React, { useState } from 'react';
+import { ASPECT_RATIOS, getAspectRatio, type AspectRatio, type AspectRatioCategory } from '../../shared/presets';
 
-export type AspectRatio = 
-    | 'blog-16:9' 
-    | 'blog-1000:420'
-    | 'linkedin-square'
-    | 'linkedin-landscape'
-    | 'linkedin-article-featured'
-    | 'linkedin-article-banner'
-    | 'linkedin-blog-link';
+export type { AspectRatio };
 
-type Category = 'blog' | 'linkedin';
-
-interface AspectRatioConfig {
-    id: AspectRatio;
-    name: string;
-    dimensions: { width: number; height: number };
-    description: string;
-}
-
-const ratioConfigs: Record<Category, AspectRatioConfig[]> = {
-    blog: [
-        { 
-            id: 'blog-16:9', 
-            name: '16:9', 
-            dimensions: { width: 1600, height: 900 }, 
-            description: 'Standard Blog' 
-        },
-        { 
-            id: 'blog-1000:420', 
-            name: '1000:420', 
-            dimensions: { width: 1000, height: 420 }, 
-            description: 'dev.to Banner' 
-        },
-    ],
-    linkedin: [
-        { 
-            id: 'linkedin-square', 
-            name: 'Square Post', 
-            dimensions: { width: 1080, height: 1080 }, 
-            description: 'Single/Multi-Image' 
-        },
-        { 
-            id: 'linkedin-landscape', 
-            name: 'Landscape Post', 
-            dimensions: { width: 1920, height: 1080 }, 
-            description: 'Single/Multi-Image' 
-        },
-        { 
-            id: 'linkedin-article-featured', 
-            name: 'Article Featured', 
-            dimensions: { width: 1200, height: 644 }, 
-            description: 'Article Header' 
-        },
-        { 
-            id: 'linkedin-article-banner', 
-            name: 'Article Banner', 
-            dimensions: { width: 600, height: 322 }, 
-            description: 'Compact Banner' 
-        },
-        { 
-            id: 'linkedin-blog-link', 
-            name: 'Blog Link', 
-            dimensions: { width: 1200, height: 627 }, 
-            description: 'Shared Links' 
-        },
-    ],
-};
+const ratiosByCategory = (category: AspectRatioCategory) => ASPECT_RATIOS.filter((r) => r.category === category);
 
 interface AspectRatioSelectorProps {
     aspectRatio: AspectRatio;
@@ -73,11 +11,11 @@ interface AspectRatioSelectorProps {
 }
 
 const AspectRatioSelector: React.FC<AspectRatioSelectorProps> = ({ aspectRatio, setAspectRatio }) => {
-    const [selectedCategory, setSelectedCategory] = useState<Category>('blog');
+    const [selectedCategory, setSelectedCategory] = useState<AspectRatioCategory>(() => getAspectRatio(aspectRatio).category);
 
-    const handleCategoryChange = (category: Category) => {
+    const handleCategoryChange = (category: AspectRatioCategory) => {
         setSelectedCategory(category);
-        setAspectRatio(ratioConfigs[category][0].id);
+        setAspectRatio(ratiosByCategory(category)[0].id);
     };
 
     return (
@@ -118,7 +56,7 @@ const AspectRatioSelector: React.FC<AspectRatioSelectorProps> = ({ aspectRatio, 
 
             {/* Ratio Options */}
             <div id="aspect-ratio-options" className="grid grid-cols-2 gap-2" role="tabpanel" aria-label="Aspect ratio options">
-                {ratioConfigs[selectedCategory].map((config) => (
+                {ratiosByCategory(selectedCategory).map((config) => (
                     <button
                         key={config.id}
                         onClick={() => setAspectRatio(config.id)}
@@ -128,13 +66,13 @@ const AspectRatioSelector: React.FC<AspectRatioSelectorProps> = ({ aspectRatio, 
                                 : 'border-surface-border bg-surface-overlay hover:border-cream-muted/20'
                         }`}
                         aria-pressed={aspectRatio === config.id}
-                        aria-label={`${config.name}, ${config.dimensions.width} by ${config.dimensions.height} pixels, ${config.description}`}
+                        aria-label={`${config.name}, ${config.width} by ${config.height} pixels, ${config.description}`}
                     >
                         <div className={`text-xs font-medium mb-0.5 ${aspectRatio === config.id ? 'text-copper' : 'text-cream'}`}>
                             {config.name}
                         </div>
                         <div className="text-[10px] text-cream-muted font-mono">
-                            {config.dimensions.width}×{config.dimensions.height}
+                            {config.width}×{config.height}
                         </div>
                         <div className="text-[10px] text-cream-muted/50 mt-0.5">{config.description}</div>
                     </button>

@@ -86,7 +86,6 @@ build
 
 # Gatsby files
 .cache/
-public
 
 # Vuepress build output
 .vuepress/dist
@@ -178,7 +177,6 @@ dist
 
 # Gatsby files
 .cache/
-public
 
 # Vuepress build output
 .vuepress/dist
@@ -235,3 +233,10 @@ logs
 *.log
 
 .vite/
+# Azure Functions (MCP API)
+api/node_modules/
+api/dist/
+api/local.settings.json
+
+# Azure Static Web Apps CLI
+.swa/

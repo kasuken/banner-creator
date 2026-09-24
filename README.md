@@ -13,7 +13,7 @@
 [![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1_AA-00A86B?style=flat&logo=w3c&logoColor=white)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat)](https://opensource.org/licenses/MIT)
 
-[✨ Live Demo](https://kasuken.github.io/banner-creator) · [📖 Documentation](#-features) · [🐛 Report Bug](https://github.com/kasuken/banner-creator/issues) · [💡 Request Feature](https://github.com/kasuken/banner-creator/issues)
+[✨ Live Demo](https://www.bannercreator.pro) · [🤖 MCP Server](#-mcp-server) · [📖 Documentation](#-features) · [🐛 Report Bug](https://github.com/kasuken/banner-creator/issues) · [💡 Request Feature](https://github.com/kasuken/banner-creator/issues)
 
 <img src="bannercreator.png" alt="Banner Creator Screenshot" width="800"/>
 
@@ -127,6 +127,9 @@ Visit **http://localhost:3000** and start creating! 🎉
 ### APIs & Services
 - **[Unsplash API](https://unsplash.com/developers)** - High-quality images
 - **Canvas API** - Banner rendering
+- **[Azure Static Web Apps](https://learn.microsoft.com/azure/static-web-apps/)** - Hosting + managed Functions API
+- **[Model Context Protocol](https://modelcontextprotocol.io)** - Public MCP server for AI agents
+- **[@napi-rs/canvas](https://github.com/Brooooooklyn/canvas)** - Server-side rendering
 
 ### Development Tools
 - **ESLint** - Code linting
@@ -145,6 +148,9 @@ npm run dev
 
 # Build for production
 npm run build
+
+# Run web app + MCP API locally (Azure SWA CLI)
+npm run dev:swa
 
 # Preview production build
 npm run preview
@@ -174,6 +180,126 @@ Get your free API key from [Unsplash Developers](https://unsplash.com/developers
 | **LinkedIn** | Article Featured | 1200×644px | Article header |
 | **LinkedIn** | Article Banner | 600×322px | Compact banner |
 | **LinkedIn** | Blog Link | 1200×627px | Shared links |
+---
+
+## 🤖 MCP Server
+
+Banner Creator includes a free, public [Model Context Protocol](https://modelcontextprotocol.io) server. AI agents can use it to create banners without opening the UI. It requires **no authentication**.
+
+**Endpoint:** `https://www.bannercreator.pro/api/mcp` (Streamable HTTP, stateless)
+
+| Tool | Description |
+|------|-------------|
+| `list_banner_options` | Lists the formats (with pixel sizes), fonts, fit modes, defaults and ranges |
+| `search_background_images` | Searches Unsplash for background photos, including photographer attribution |
+| `render_banner` | Renders the banner server-side and returns it as a PNG/JPEG, plus an **Edit in browser** link that opens the same banner in the web app |
+
+**Claude Code**
+
+```bash
+claude mcp add --transport http banner-creator https://www.bannercreator.pro/api/mcp
+```
+
+**VS Code** (`.vscode/mcp.json`)
+
+```json
+{
+  "servers": {
+    "banner-creator": {
+      "type": "http",
+      "url": "https://www.bannercreator.pro/api/mcp"
+    }
+  }
+}
+```
+
+The server runs as a managed Azure Function inside the Static Web App (`api/`). It shares its drawing code with the web app (`shared/renderBanner.ts`), so a server-rendered banner matches what you see in the browser. Server-side fonts are open-licensed stand-ins (Arimo for Arial/Helvetica, Tinos for Times New Roman, Cousine for Courier New, Gelasio for Georgia, DejaVu Sans for Verdana, Anton for Impact, Comic Neue for Comic Sans MS).
+
+### Deep links
+
+The web app reads its initial settings from the query string, for example:
+
+```
+https://www.bannercreator.pro/?text=Hello%20World&format=linkedin-square&font=Impact&size=96&blur=4
+```
+
+Supported keys: `text`, `font`, `size`, `color`, `stroke`, `format`, `blur`, `fit`, `image`.
+
+---
+
+## ☁️ Deploy to Azure
+
+The app is hosted on **Azure Static Web Apps (Free tier)**. The Free tier includes managed Functions, a custom domain and a free SSL certificate. The infrastructure is defined in [`infra/main.bicep`](infra/main.bicep).
+
+### 1. Create the Static Web App
+
+```bash
+az group create --name rg-banner-creator --location westeurope
+
+export UNSPLASH_ACCESS_KEY=<your-unsplash-access-key>
+az deployment group create \
+  --resource-group rg-banner-creator \
+  --parameters infra/main.bicepparam
+```
+
+Note the `defaultHostname` output (e.g. `nice-sand-0123.azurestaticapps.net`).
+
+### 2. Configure GitHub Actions
+
+```bash
+gh secret set AZURE_STATIC_WEB_APPS_API_TOKEN --body "$(az staticwebapp secrets list \
+  --name banner-creator --resource-group rg-banner-creator --query properties.apiKey -o tsv)"
+gh secret set VITE_UNSPLASH_ACCESS_KEY --body "<your-unsplash-access-key>"
+```
+
+Each push to `main` deploys to production through [`.github/workflows/azure-static-web-apps.yml`](.github/workflows/azure-static-web-apps.yml). Each pull request gets its own preview environment.
+
+### 3. Add the custom domain (`www.bannercreator.pro`)
+
+The site is served on **`www.bannercreator.pro`**. The root domain `bannercreator.pro` redirects to it.
+
+The DNS for `bannercreator.pro` is hosted at GoDaddy, which doesn't support ALIAS/ANAME records at the root domain. The Free tier also has no fixed IP for an `A` record. So only `www` is bound to the Static Web App, and GoDaddy forwards the root domain to it.
+
+**a) DNS at GoDaddy**
+
+| Type | Host | Value |
+|------|------|-------|
+| `CNAME` | `www` | `<defaultHostname>` (e.g. `wonderful-wave-0aabc7403.1.azurestaticapps.net`) |
+
+**b) Bind `www` to the Static Web App.** The CNAME must already resolve.
+
+```bash
+az staticwebapp hostname set --name banner-creator --resource-group rg-banner-creator --hostname www.bannercreator.pro --validation-method cname-delegation
+az staticwebapp hostname list --name banner-creator --resource-group rg-banner-creator -o table   # status: Ready
+```
+
+Azure issues and renews the certificate automatically.
+
+**c) Forward the root domain.** In GoDaddy, go to **Domain → DNS → Forwarding** and add a domain forward:
+- From: `bannercreator.pro`
+- To: `https://www.bannercreator.pro`
+- Type: **Permanent (301)**
+- Settings: **Forward only**
+
+GoDaddy replaces the root domain's `A` records with its forwarding servers.
+
+**d) Optional: make `www` the default domain.** In the portal, go to **Static Web App → Custom domains**, select `www.bannercreator.pro`, and choose **Set default**. Requests to the `azurestaticapps.net` hostname then redirect to `https://www.bannercreator.pro`.
+
+> Want the root domain served directly instead? Move DNS to Azure DNS or Cloudflare, which support ALIAS records or CNAME flattening at the root domain. Then bind `bannercreator.pro` with `--validation-method dns-txt-token`. See [Set up an apex domain](https://learn.microsoft.com/azure/static-web-apps/apex-domain-external).
+
+### Local development with the API
+
+Requires [Azure Functions Core Tools v4](https://learn.microsoft.com/azure/azure-functions/functions-run-local).
+
+```bash
+cp api/local.settings.json.example api/local.settings.json   # add your Unsplash key
+npm install && npm install --prefix api
+npm run dev:swa    # http://localhost:4280, MCP at http://localhost:4280/api/mcp
+```
+
+To inspect the MCP server: `npx @modelcontextprotocol/inspector`, then connect to `http://localhost:4280/api/mcp` using the *Streamable HTTP* transport.
+
+> **Note:** The endpoint is anonymous, and the Free tier has no rate limiting. Use a production Unsplash key, because demo keys are limited to 50 requests per hour.
 
 ---
 

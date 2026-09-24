@@ -14,7 +14,7 @@ export interface BannerProperties {
     imageUrl: string;
 }
 
-export type ImageFitMode = 'cover' | 'stretch';
+export type { ImageFitMode } from '../../shared/presets';
 
 export interface UnsplashResponse {
     results: Image[];

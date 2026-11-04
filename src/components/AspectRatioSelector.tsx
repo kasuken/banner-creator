@@ -23,42 +23,41 @@ const AspectRatioSelector: React.FC<AspectRatioSelectorProps> = ({ aspectRatio, 
             <label className="block mb-2 text-xs font-medium text-cream-dim tracking-wide">
                 Platform & Size
             </label>
-            
-            {/* Category Tabs */}
-            <div className="flex gap-1 mb-3 p-0.5 bg-surface-overlay rounded-md border border-surface-border" role="tablist" aria-label="Platform selection">
+
+            {/* Category switch — pressed buttons rather than tabs, so every control stays a normal tab stop */}
+            <div className="flex gap-1 mb-3 p-0.5 bg-surface-overlay rounded-md border border-surface-border" role="group" aria-label="Platform selection">
                 <button
+                    type="button"
                     onClick={() => handleCategoryChange('blog')}
                     className={`flex-1 px-4 py-2 rounded text-xs font-medium transition-all ${
                         selectedCategory === 'blog'
                             ? 'bg-copper text-surface'
                             : 'text-cream-muted hover:text-cream'
                     }`}
-                    role="tab"
-                    aria-selected={selectedCategory === 'blog'}
-                    aria-controls="aspect-ratio-options"
+                    aria-pressed={selectedCategory === 'blog'}
                 >
                     Blog
                 </button>
                 <button
+                    type="button"
                     onClick={() => handleCategoryChange('linkedin')}
                     className={`flex-1 px-4 py-2 rounded text-xs font-medium transition-all ${
                         selectedCategory === 'linkedin'
                             ? 'bg-copper text-surface'
                             : 'text-cream-muted hover:text-cream'
                     }`}
-                    role="tab"
-                    aria-selected={selectedCategory === 'linkedin'}
-                    aria-controls="aspect-ratio-options"
+                    aria-pressed={selectedCategory === 'linkedin'}
                 >
                     LinkedIn
                 </button>
             </div>
 
             {/* Ratio Options */}
-            <div id="aspect-ratio-options" className="grid grid-cols-2 gap-2" role="tabpanel" aria-label="Aspect ratio options">
+            <div className="grid grid-cols-2 gap-2" role="group" aria-label="Aspect ratio options">
                 {ratiosByCategory(selectedCategory).map((config) => (
                     <button
                         key={config.id}
+                        type="button"
                         onClick={() => setAspectRatio(config.id)}
                         className={`p-3 rounded-md border text-left transition-all ${
                             aspectRatio === config.id

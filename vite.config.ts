@@ -13,6 +13,10 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    // Image search is served by the Functions host (`npm run dev:swa` or `func start` in api/)
+    proxy: {
+      '/api': 'http://localhost:4280',
+    },
   },
   build: {
     outDir: 'build',

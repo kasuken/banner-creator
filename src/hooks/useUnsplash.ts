@@ -1,60 +1,70 @@
-import { useState } from 'react';
-import type { Image } from '../types';
+import { useCallback, useRef, useState } from 'react';
+import type { UnsplashPhoto } from '../types';
 
-const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY?.trim();
-const HAS_VALID_ACCESS_KEY = Boolean(
-    ACCESS_KEY &&
-    ACCESS_KEY !== 'YOUR_UNSPLASH_ACCESS_KEY' &&
-    ACCESS_KEY !== 'your_unsplash_access_key_here'
-);
+// Image search goes through our own API so the Unsplash access key stays on the server.
+const SEARCH_ENDPOINT = '/api/images/search';
+const RESULTS_PER_PAGE = 12;
+
+interface SearchResponse {
+    results?: UnsplashPhoto[];
+    error?: string;
+}
 
 export const useUnsplash = () => {
-    const [images, setImages] = useState<Image[]>([]);
+    const [images, setImages] = useState<UnsplashPhoto[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const latestRequest = useRef(0);
 
-    const searchImages = async (query: string) => {
-        if (!query.trim()) {
+    const search = useCallback(async (query: string) => {
+        const trimmed = query.trim();
+        const requestId = ++latestRequest.current;
+
+        if (!trimmed) {
             setImages([]);
+            setError(null);
+            setLoading(false);
             return;
         }
 
-        if (!HAS_VALID_ACCESS_KEY) {
-            setError('Unsplash API key is not configured. Set VITE_UNSPLASH_ACCESS_KEY and redeploy.');
-            setImages([]);
-            return;
-        }
-        
         setLoading(true);
         setError(null);
         try {
             const response = await fetch(
-                `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=12`,
-                {
-                    headers: {
-                        Authorization: `Client-ID ${ACCESS_KEY}`,
-                        'Accept-Version': 'v1',
-                    },
-                }
+                `${SEARCH_ENDPOINT}?query=${encodeURIComponent(trimmed)}&per_page=${RESULTS_PER_PAGE}`
             );
-            
-            if (!response.ok) {
-                if (response.status === 401) {
-                    throw new Error('Unsplash authentication failed. Check VITE_UNSPLASH_ACCESS_KEY in production.');
-                }
+            const data: SearchResponse | null = await response.json().catch(() => null);
 
-                throw new Error(`Failed to fetch images (status ${response.status})`);
+            // A newer search started while this one was in flight; drop the stale result.
+            if (requestId !== latestRequest.current) return;
+
+            if (!response.ok) {
+                throw new Error(data?.error ?? `Image search failed (HTTP ${response.status}).`);
             }
-            
-            const data = await response.json();
-            setImages(data.results || []);
+            setImages(Array.isArray(data?.results) ? data.results : []);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred');
+            if (requestId !== latestRequest.current) return;
+            setError(err instanceof Error ? err.message : 'Image search failed.');
             setImages([]);
         } finally {
-            setLoading(false);
+            if (requestId === latestRequest.current) setLoading(false);
         }
-    };
+    }, []);
 
-    return { images, loading, error, searchImages, isConfigured: HAS_VALID_ACCESS_KEY };
+    /**
+     * Registers the photo as used with Unsplash, which their API guidelines require when a photo
+     * is displayed. Returns the full-size URL the server resolved, if it could.
+     */
+    const trackPhotoUse = useCallback(async (id: string): Promise<string | null> => {
+        try {
+            const response = await fetch(`/api/images/photos/${encodeURIComponent(id)}`);
+            if (!response.ok) return null;
+            const data: { image_url?: string } = await response.json();
+            return typeof data.image_url === 'string' ? data.image_url : null;
+        } catch {
+            return null;
+        }
+    }, []);
+
+    return { images, loading, error, search, trackPhotoUse };
 };

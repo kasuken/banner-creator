@@ -49,7 +49,7 @@
 
 ### Prerequisites
 
-- **Node.js** 16.x or higher
+- **Node.js** 22.x or higher
 - **npm** or **yarn**
 - **Unsplash API Key** (free tier available)
 
@@ -65,14 +65,11 @@ cd banner-creator
 # Install dependencies
 npm install
 
-# Create environment file
-cp .env.example .env
-
-# Add your Unsplash API key to .env
-# VITE_UNSPLASH_ACCESS_KEY=your_api_key_here
-
-# Start development server
+# Start development server (UI only)
 npm run dev
+
+# Or run the UI and the MCP API together (image search lives in /api)
+npm run dev:swa
 ```
 
 Visit **http://localhost:3000** and start creating! 🎉
@@ -155,17 +152,22 @@ npm run dev:swa
 # Preview production build
 npm run preview
 
+# Run the unit tests
+npm test
+
 # Lint code
 npm run lint
 ```
 
 ### Environment Variables
 
-Create a `.env` file in the root directory:
+Image search and the MCP server call Unsplash from the server, so the access key belongs to the API and never to the browser bundle. Copy the example settings file and set the key:
 
-```env
-VITE_UNSPLASH_ACCESS_KEY=your_unsplash_api_key_here
+```json
+{ "Values": { "UNSPLASH_ACCESS_KEY": "your_unsplash_access_key_here" } }
 ```
+
+The web app calls `GET /api/images/search`, which proxies Unsplash. There is no client-side Unsplash key to configure.
 
 Get your free API key from [Unsplash Developers](https://unsplash.com/developers).
 
@@ -249,7 +251,6 @@ Note the `defaultHostname` output (e.g. `nice-sand-0123.azurestaticapps.net`).
 ```bash
 gh secret set AZURE_STATIC_WEB_APPS_API_TOKEN --body "$(az staticwebapp secrets list \
   --name banner-creator --resource-group rg-banner-creator --query properties.apiKey -o tsv)"
-gh secret set VITE_UNSPLASH_ACCESS_KEY --body "<your-unsplash-access-key>"
 ```
 
 Each push to `main` deploys to production through [`.github/workflows/azure-static-web-apps.yml`](.github/workflows/azure-static-web-apps.yml). Each pull request gets its own preview environment.

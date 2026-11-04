@@ -1,11 +1,13 @@
-export interface Image {
+export interface UnsplashPhoto {
     id: string;
-    urls: {
-        regular: string;
-        small: string;
-        thumb: string;
-    };
-    alt_description: string;
+    description: string;
+    width: number;
+    height: number;
+    image_url: string;
+    thumbnail_url: string;
+    photographer: string;
+    photographer_url: string;
+    unsplash_url: string;
 }
 
 export interface BannerProperties {
@@ -15,9 +17,3 @@ export interface BannerProperties {
 }
 
 export type { ImageFitMode } from '../../shared/presets';
-
-export interface UnsplashResponse {
-    results: Image[];
-    total: number;
-    total_pages: number;
-}

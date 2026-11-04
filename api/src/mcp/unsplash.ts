@@ -1,4 +1,4 @@
-import { UserFacingError } from './render';
+import { UserFacingError } from '../errors';
 
 const API_BASE = 'https://api.unsplash.com';
 const UTM = 'utm_source=banner_creator&utm_medium=referral';
@@ -38,7 +38,9 @@ const unsplashFetch = async <T>(pathAndQuery: string): Promise<T> => {
         signal: AbortSignal.timeout(10_000),
     });
     if (response.status === 404) throw new UserFacingError('Unsplash photo not found.');
-    if (response.status === 403) throw new UserFacingError('Unsplash rate limit reached, try again later.');
+    if (response.status === 401 || response.status === 403) {
+        throw new UserFacingError('Unsplash rejected the request. Check UNSPLASH_ACCESS_KEY, or try again later if the rate limit was reached.');
+    }
     if (!response.ok) throw new UserFacingError(`Unsplash request failed (HTTP ${response.status}).`);
     return (await response.json()) as T;
 };

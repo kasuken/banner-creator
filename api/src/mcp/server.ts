@@ -13,7 +13,8 @@ import {
     settingsToSearchParams,
     type BannerSettings,
 } from '../../../shared/presets';
-import { renderBannerImage, UserFacingError } from './render';
+import { UserFacingError } from '../errors';
+import { renderBannerImage } from './render';
 import { getPhotoForUse, searchPhotos } from './unsplash';
 
 const FONT_NAMES = FONTS.map((f) => f.name) as [string, ...string[]];

@@ -22,11 +22,11 @@ const FONTS = [
 rmSync('dist', { recursive: true, force: true });
 
 await build({
-    entryPoints: ['src/functions/mcp.ts'],
+    entryPoints: ['src/functions/mcp.ts', 'src/functions/images.ts'],
     outdir: 'dist/functions',
     bundle: true,
     platform: 'node',
-    target: 'node20',
+    target: 'node22',
     format: 'esm',
     packages: 'external',
     sourcemap: true,

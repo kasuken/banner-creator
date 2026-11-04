@@ -17,18 +17,19 @@ const ImageFitSelector: React.FC<ImageFitSelectorProps> = ({ imageFit, setImageF
             <label className="block mb-2 text-xs font-medium text-cream-dim tracking-wide">
                 Image Fit
             </label>
-            <div className="flex gap-1 p-0.5 bg-surface-overlay rounded-md border border-surface-border" role="radiogroup" aria-label="Image fit mode">
+            {/* Pressed buttons rather than a radiogroup: each option stays a normal tab stop */}
+            <div className="flex gap-1 p-0.5 bg-surface-overlay rounded-md border border-surface-border" role="group" aria-label="Image fit mode">
                 {options.map((opt) => (
                     <button
                         key={opt.id}
+                        type="button"
                         onClick={() => setImageFit(opt.id)}
                         className={`flex-1 px-4 py-2 rounded text-xs font-medium transition-all ${
                             imageFit === opt.id
                                 ? 'bg-copper text-surface'
                                 : 'text-cream-muted hover:text-cream'
                         }`}
-                        role="radio"
-                        aria-checked={imageFit === opt.id}
+                        aria-pressed={imageFit === opt.id}
                         aria-label={`${opt.label} — ${opt.description}`}
                     >
                         {opt.label}

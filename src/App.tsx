@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import BannerCanvas from './components/BannerCanvas';
 import TextEditor from './components/TextEditor';
 import FontSelector from './components/FontSelector';
@@ -25,6 +25,9 @@ const App: React.FC = () => {
   const [blurAmount, setBlurAmount] = useState(initialSettings.blurAmount);
   const [imageFit, setImageFit] = useState<ImageFitMode>(initialSettings.imageFit);
   const [backgroundImage, setBackgroundImage] = useState(initialSettings.backgroundImage);
+  // Incremented after each canvas draw so the download button can re-measure the exported PNG.
+  const [renderRevision, setRenderRevision] = useState(0);
+  const handleRendered = useCallback(() => setRenderRevision((revision) => revision + 1), []);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
@@ -146,10 +149,11 @@ const App: React.FC = () => {
                 blurAmount={blurAmount}
                 imageFit={imageFit}
                 backgroundImage={backgroundImage}
+                onRendered={handleRendered}
               />
             </div>
             
-            <DownloadButton canvasRef={canvasRef} />
+            <DownloadButton canvasRef={canvasRef} revision={renderRevision} />
 
             {/* Visitor Badge */}
             <div className="mt-8 flex justify-center opacity-40 hover:opacity-70 transition-opacity">

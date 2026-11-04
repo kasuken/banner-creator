@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUnsplash } from '../hooks/useUnsplash';
+import type { UnsplashPhoto } from '../types';
 
 interface ImageSearchProps {
     setBackgroundImage: (url: string) => void;
@@ -7,22 +8,22 @@ interface ImageSearchProps {
 
 const ImageSearch: React.FC<ImageSearchProps> = ({ setBackgroundImage }) => {
     const [query, setQuery] = useState('');
-    const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
-    const { images, loading, error, searchImages } = useUnsplash();
+    const [selected, setSelected] = useState<UnsplashPhoto | null>(null);
+    const { images, loading, error, search, trackPhotoUse } = useUnsplash();
 
     useEffect(() => {
         const debounceSearch = setTimeout(() => {
-            if (query) {
-                searchImages(query);
-            }
-        }, 500);
+            void search(query);
+        }, 400);
 
         return () => clearTimeout(debounceSearch);
-    }, [query]);
+    }, [query, search]);
 
-    const handleImageSelect = (imageId: string, imageUrl: string) => {
-        setSelectedImageId(imageId);
-        setBackgroundImage(imageUrl);
+    const handleImageSelect = (image: UnsplashPhoto) => {
+        setSelected(image);
+        setBackgroundImage(image.image_url);
+        // Fire-and-forget: registers the download Unsplash requires for attribution reporting.
+        void trackPhotoUse(image.id);
     };
 
     return (
@@ -56,49 +57,73 @@ const ImageSearch: React.FC<ImageSearchProps> = ({ setBackgroundImage }) => {
                         <span className="text-xs">Searching...</span>
                     </div>
                 )}
-            
+
                 {error && (
                     <div className="mt-3 p-3 bg-red-900/20 border border-red-800/30 rounded-md text-red-400 text-xs" role="alert">
                         {error}
                     </div>
                 )}
             </div>
-            
+
             {images.length > 0 && (
-                <div className="mt-3 grid grid-cols-3 gap-1.5 max-h-56 overflow-y-auto studio-scroll rounded-md" role="list" aria-label="Search results">
+                <ul className="mt-3 grid grid-cols-3 gap-1.5 max-h-56 overflow-y-auto studio-scroll rounded-md list-none" aria-label="Search results">
                     {images.map((image) => (
-                        <button
-                            key={image.id}
-                            onClick={() => handleImageSelect(image.id, image.urls.regular)}
-                            className={`relative group overflow-hidden rounded-sm transition-all ${
-                                selectedImageId === image.id
-                                    ? 'ring-2 ring-copper ring-offset-1 ring-offset-surface'
-                                    : 'hover:ring-1 hover:ring-cream-muted/20'
-                            }`}
-                            aria-label={`Select image: ${image.alt_description || 'Unsplash image'}`}
-                            aria-pressed={selectedImageId === image.id}
-                            role="listitem"
-                        >
-                            <img
-                                src={image.urls.thumb}
-                                alt={image.alt_description || 'Unsplash image'}
-                                className="w-full h-20 object-cover transition-transform group-hover:scale-105"
-                            />
-                            {selectedImageId === image.id && (
-                                <div className="absolute inset-0 bg-copper/20 flex items-center justify-center">
-                                    <div className="w-5 h-5 rounded-full bg-copper flex items-center justify-center">
-                                        <svg className="w-3 h-3 text-surface" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                        </svg>
+                        <li key={image.id}>
+                            <button
+                                type="button"
+                                onClick={() => handleImageSelect(image)}
+                                className={`relative w-full group overflow-hidden rounded-sm transition-all ${
+                                    selected?.id === image.id
+                                        ? 'ring-2 ring-copper ring-offset-1 ring-offset-surface'
+                                        : 'hover:ring-1 hover:ring-cream-muted/20'
+                                }`}
+                                aria-label={`Use photo by ${image.photographer}: ${image.description || 'Unsplash image'}`}
+                                aria-pressed={selected?.id === image.id}
+                            >
+                                <img
+                                    src={image.thumbnail_url}
+                                    alt=""
+                                    className="w-full h-20 object-cover transition-transform group-hover:scale-105"
+                                />
+                                {selected?.id === image.id && (
+                                    <div className="absolute inset-0 bg-copper/20 flex items-center justify-center">
+                                        <div className="w-5 h-5 rounded-full bg-copper flex items-center justify-center">
+                                            <svg className="w-3 h-3 text-surface" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                            </svg>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </button>
+                                )}
+                            </button>
+                        </li>
                     ))}
-                </div>
+                </ul>
             )}
-            
-            {!loading && query && images.length === 0 && (
+
+            {selected && (
+                <p className="mt-2 text-[11px] text-cream-muted/60">
+                    Photo by{' '}
+                    <a
+                        href={selected.photographer_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-cream transition-colors"
+                    >
+                        {selected.photographer}
+                    </a>{' '}
+                    on{' '}
+                    <a
+                        href={selected.unsplash_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-cream transition-colors"
+                    >
+                        Unsplash
+                    </a>
+                </p>
+            )}
+
+            {!loading && !error && query && images.length === 0 && (
                 <div className="mt-3 text-center py-6 text-cream-muted/50" role="status">
                     <p className="text-xs">No results. Try another term.</p>
                 </div>
